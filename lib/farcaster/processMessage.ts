@@ -4,6 +4,7 @@ import getChannelIdFromCast from "../getChannelIdFromCast";
 import { toHex } from "viem";
 import getDate from "./getDate";
 import getUserDataByFid from "./getUserByFid";
+import getAlternativeEmbeds from "../getAlternativeEmbeds";
 
 const processMessage = async (message: Message) => {
   const messageData = message.data;
@@ -19,7 +20,7 @@ const processMessage = async (message: Message) => {
 
   const cast = messageData.castAddBody;
   const validEmbed = await getValidEmbed(cast);
-  if (!validEmbed) {
+  if (!(validEmbed && validEmbed.url)) {
     return;
   }
 
@@ -27,14 +28,16 @@ const processMessage = async (message: Message) => {
   const authorFid = messageData.fid;
   const author = await getUserDataByFid(authorFid);
 
+  const alternativeEmbeds = await getAlternativeEmbeds(validEmbed.url);
+
   console.log({
     post_hash: toHex(message.hash),
-    // likes,
+    likes: 0,
     created_at: getDate(messageData.timestamp),
     embeds: [validEmbed],
     author,
     channelId,
-    // alternativeEmbeds,
+    alternativeEmbeds,
     authorFid,
   });
 };
