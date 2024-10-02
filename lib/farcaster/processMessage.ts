@@ -5,6 +5,7 @@ import { toHex } from "viem";
 import getDate from "./getDate";
 import getUserDataByFid from "./getUserByFid";
 import getAlternativeEmbeds from "../getAlternativeEmbeds";
+import upsertCast from "../supabse/upsertCast";
 
 const processMessage = async (message: Message) => {
   const messageData = message.data;
@@ -18,19 +19,24 @@ const processMessage = async (message: Message) => {
     return;
   }
 
-  const cast = messageData.castAddBody;
-  const validEmbed = await getValidEmbed(cast);
+  const { castAddBody } = messageData;
+  const validEmbed = await getValidEmbed(castAddBody);
   if (!(validEmbed && validEmbed.url)) {
     return;
   }
 
-  const channelId = getChannelIdFromCast(cast);
+  const channelId = getChannelIdFromCast(castAddBody);
   const authorFid = messageData.fid;
   const author = await getUserDataByFid(authorFid);
 
-  const alternativeEmbeds = await getAlternativeEmbeds(validEmbed.url);
+  let alternativeEmbeds = [];
+  try {
+    alternativeEmbeds = await getAlternativeEmbeds(validEmbed.url);
+  } catch (error: any) {
+    console.error(error.message);
+  }
 
-  console.log({
+  const newCast = {
     post_hash: toHex(message.hash),
     likes: 0,
     created_at: getDate(messageData.timestamp),
@@ -39,7 +45,8 @@ const processMessage = async (message: Message) => {
     channelId,
     alternativeEmbeds,
     authorFid,
-  });
+  };
+  upsertCast(newCast);
 };
 
 export default processMessage;

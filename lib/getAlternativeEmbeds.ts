@@ -1,5 +1,5 @@
 const getAlternativeEmbeds = async (url: string) => {
-  const songLinkData = await fetch(
+  const songLinkResponse = await fetch(
     `https://api.song.link/v1-alpha.1/links?url=${url}&userCountry=US&songIfSingle=true`,
     {
       method: "GET",
@@ -8,7 +8,13 @@ const getAlternativeEmbeds = async (url: string) => {
         Accept: "application/json",
       },
     }
-  ).then((res) => res.json());
+  );
+  if (!songLinkResponse.ok) {
+    throw new Error(
+      `song.link failed to fetch (${songLinkResponse.statusText})`
+    );
+  }
+  const songLinkData = await songLinkResponse.json();
 
   const alternativeEmbeds = Object.values(songLinkData.linksByPlatform).map(
     ({ url }: any) => url

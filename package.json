@@ -15,6 +15,7 @@
   "dependencies": {
     "@farcaster/hub-nodejs": "^0.12.1",
     "@neynar/nodejs-sdk": "^1.54.1",
+    "@supabase/supabase-js": "^2.45.4",
     "@zoralabs/protocol-deployments": "^0.3.3",
     "dotenv": "^16.4.5",
     "viem": "^2.21.15"

@@ -8,8 +8,6 @@ export default function getChannelIdFromCast(cast: CastAddBody) {
     const match = /\/channel\/([^/]+)$/.exec(parentUrl);
     if (match) return match[1];
 
-    return CHANNELS.find((val) => val.parentUrl == parentUrl)?.value ?? null;
+    return CHANNELS.find((val) => val.parentUrl == parentUrl)?.value;
   }
-
-  return null;
 }
