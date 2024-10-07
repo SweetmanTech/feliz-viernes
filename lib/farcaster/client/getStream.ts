@@ -4,9 +4,10 @@ import {
   type MergeMessageHubEvent,
 } from "@farcaster/hub-nodejs";
 
-const getStream = async (client: HubRpcClient) => {
+const getStream = async (client: HubRpcClient, lastEventId?: number) => {
   const subscription = await client.subscribe({
     eventTypes: [HubEventType.MERGE_MESSAGE],
+    fromId: lastEventId,
   });
 
   if (!subscription.isOk()) {

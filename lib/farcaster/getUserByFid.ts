@@ -1,12 +1,9 @@
 import farcasterClient from "@/lib/farcaster/client";
-import clientReady from "@/lib/farcaster/client/clientReady";
 import { UserDataType } from "@farcaster/hub-nodejs";
 import { type User } from "@neynar/nodejs-sdk/build/neynar-api/v2";
 import { toHex } from "viem";
 
-const getUserDataByFid = async (fid: number) => {
-  await clientReady(farcasterClient);
-
+const getUserByFid = async (fid: number) => {
   const user: Partial<User> = {
     fid,
     verifications: [],
@@ -50,4 +47,4 @@ const getUserDataByFid = async (fid: number) => {
   return user;
 };
 
-export default getUserDataByFid;
+export default getUserByFid;
