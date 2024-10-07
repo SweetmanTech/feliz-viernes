@@ -1,7 +1,8 @@
 import { getSSLHubRpcClient } from "@farcaster/hub-nodejs";
 
-const hubRpcEndpoint = "hub-grpc.pinata.cloud";
-
-const farcasterClient = getSSLHubRpcClient(hubRpcEndpoint);
+if (!process.env.GRPC_ENDPOINT) {
+  throw new Error("GRPC_ENDPOINT is not set");
+}
+const farcasterClient = getSSLHubRpcClient(process.env.GRPC_ENDPOINT);
 
 export default farcasterClient;

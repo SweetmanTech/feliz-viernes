@@ -1,0 +1,61 @@
+name: Deploy to DigitalOcean Droplet
+
+on:
+  push:
+    branches:
+      - main
+      - arpit/deploy-action
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Debug Secrets
+        run: |
+          echo "DROPLET_IP is set: ${{ secrets.DROPLET_IP != '' }}"
+          echo "DROPLET_USER is set: ${{ secrets.DROPLET_USER != '' }}"
+          echo "DROPLET_PASSWORD is set: ${{ secrets.DROPLET_PASSWORD != '' }}"
+
+      - name: Deploy to DigitalOcean Droplet
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DROPLET_IP }}
+          username: ${{ secrets.DROPLET_USER }}
+          password: ${{ secrets.DROPLET_PASSWORD }}
+          script: |
+            echo "Connected to Droplet"
+            # Create app directory if it doesn't exist
+            mkdir -p ~/farcaster-grpc-indexer
+            cd ~/farcaster-grpc-indexer
+
+            # Initialize git repository if it doesn't exist
+            if [ ! -d .git ]; then
+              git init
+              git remote add origin https://github.com/Coop-Records/farcaster-grpc-indexer.git
+            fi
+
+            # Fetch latest code and handle local changes
+            git fetch --all
+            git checkout -B ${{ github.ref_name }} origin/${{ github.ref_name }}
+            git reset HEAD --hard
+            git pull origin ${{ github.ref_name }}
+
+            echo "Current branch:"
+            git branch --show-current
+            echo "Git status:"
+            git status
+
+            export PATH="/root/.nvm/versions/node/v20.18.0/bin:/root/.bun/bin:$PATH"
+
+            # Ensure correct Node.js version
+            source ~/.nvm/nvm.sh
+            nvm use 20
+
+            # Install dependencies
+            bun install
+
+            # Start using PM2
+            pm2 restart ecosystem.config.cjs --update-env
