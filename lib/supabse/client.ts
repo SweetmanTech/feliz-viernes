@@ -1,12 +1,12 @@
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+const supabaseServerKey = process.env.SUPABASE_SERVER_KEY;
 
-if (!(supabaseUrl && supabaseAnonKey)) {
+if (!(supabaseUrl && supabaseServerKey)) {
   throw new Error("Supabase ENV variables not set");
 }
 
-const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+const supabaseClient = createClient(supabaseUrl, supabaseServerKey);
 
 export default supabaseClient;

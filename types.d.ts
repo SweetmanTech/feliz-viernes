@@ -1,5 +1,7 @@
+import type { Address } from "viem";
+
 export type Cast = {
-  post_hash: string;
+  post_hash: Address;
   likes: number;
   created_at: Date;
   embeds: Embed[];
