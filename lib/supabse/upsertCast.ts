@@ -9,10 +9,9 @@ async function upsertCast(cast: Cast) {
     });
   if (error) {
     console.error("Error upserting cast:", error);
-    return { success: false, statusText };
+    throw new Error(statusText);
   }
   console.log(statusText, "cast(hash):", cast.post_hash);
-  return { success: true, statusText };
 }
 
 export default upsertCast;
