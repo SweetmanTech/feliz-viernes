@@ -4,7 +4,9 @@
   "type": "module",
   "scripts": {
     "start": "bun index.ts",
-    "dev": "bun --watch index.ts"
+    "dev": "bun --watch index.ts",
+    "generate-signer": "bun helpers/generateSigner.ts",
+    "test-signer": "bun helpers/testSigner.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"
