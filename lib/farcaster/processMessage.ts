@@ -32,7 +32,12 @@ const processMessage = async (message: Message) => {
 
   let alternativeEmbeds = [];
   try {
-    alternativeEmbeds = await getAlternativeEmbeds(validEmbed.url);
+    if (validEmbed.platform === "spotify")
+      try {
+        alternativeEmbeds = await getAlternativeEmbeds(validEmbed.url);
+      } catch (error: any) {
+        console.error(error.message, validEmbed.url);
+      }
   } catch (error: any) {
     console.error(error.message);
   }

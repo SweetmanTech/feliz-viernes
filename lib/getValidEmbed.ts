@@ -40,7 +40,7 @@ export default async function getValidEmbed(cast: CastAddBody) {
       }
     }
 
-    return embed;
+    return { ...embed, platform };
   }
 
   return undefined;
