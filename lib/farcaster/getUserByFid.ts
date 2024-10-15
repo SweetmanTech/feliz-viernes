@@ -3,7 +3,7 @@ import { UserDataType } from "@farcaster/hub-nodejs";
 import { type User } from "@neynar/nodejs-sdk/build/neynar-api/v2";
 import { toHex } from "viem";
 
-const getUserByFid = async (fid: number) => {
+const getUserByFid = async (fid: number, retry = 0) => {
   const user: Partial<User> = {
     fid,
     verifications: [],
@@ -44,6 +44,12 @@ const getUserByFid = async (fid: number) => {
     });
   });
 
+  if (!(user.username && user.display_name && user.pfp_url)) {
+    if (retry === 2) {
+      throw new Error("User not found");
+    }
+    return getUserByFid(fid, retry + 1);
+  }
   return user;
 };
 
