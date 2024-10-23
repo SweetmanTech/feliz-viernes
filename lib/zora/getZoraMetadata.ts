@@ -21,6 +21,7 @@ async function getZoraMetadata(url: string) {
     args: [tokenId],
   });
   const metadata = await fetchIpfs(uri).then((res) => res.json());
+  metadata.uri = uri;
   return metadata;
 }
 
