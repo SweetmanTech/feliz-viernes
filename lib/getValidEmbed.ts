@@ -38,6 +38,7 @@ export default async function getValidEmbed(cast: CastAddBody) {
       ) {
         continue;
       }
+      embed.url = metadata.uri;
     }
 
     return { ...embed, platform };
