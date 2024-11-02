@@ -1,32 +1,15 @@
-import { Message, MessageType } from "@farcaster/hub-nodejs";
-import getValidEmbed from "@/lib/getValidEmbed";
-import getChannelIdFromCast from "@/lib/getChannelIdFromCast";
+import { Message } from "@farcaster/hub-nodejs";
 import { toHex } from "viem";
 import getDate from "@/lib/farcaster/getDate";
 import getUserDataByFid from "@/lib/farcaster/getUserByFid";
-import getAlternativeEmbeds from "@/lib/getAlternativeEmbeds";
 import botCast from "@/lib/farcaster/botCast";
 
 const processMessage = async (message: Message) => {
   const messageData = message.data;
-  if (
-    !(
-      messageData &&
-      messageData.type === MessageType.CAST_ADD &&
-      messageData.castAddBody
-    )
-  ) {
+  if (!messageData) {
     return;
   }
 
-  const { castAddBody } = messageData;
-  // TODO: filer on posts from SWEETMAN_ETH in a geners shouldReply filter lib.
-  // const validEmbed = await getValidEmbed(castAddBody);
-  // if (!(validEmbed && validEmbed.url)) {
-  //   return;
-  // }
-
-  const channelId = getChannelIdFromCast(castAddBody);
   const authorFid = messageData.fid;
   const author = await getUserDataByFid(authorFid);
 
@@ -35,12 +18,14 @@ const processMessage = async (message: Message) => {
     likes: 0,
     created_at: getDate(messageData.timestamp),
     author,
-    channelId,
     authorFid,
+    embeds: [],
+    alternativeEmbeds: [],
+    text: (messageData as any)?.text || "",
   };
 
-  console.log(newCast);
-  // await botCast(newCast);
+  console.log(`Replying to cast from sweetman.eth: ${newCast.post_hash}`);
+  await botCast(newCast);
 };
 
 export default processMessage;

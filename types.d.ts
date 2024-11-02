@@ -9,4 +9,5 @@ export type Cast = {
   channelId?: string;
   alternativeEmbeds: Embed[];
   authorFid: number;
+  text: string;
 };
