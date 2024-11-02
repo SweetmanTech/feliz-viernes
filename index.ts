@@ -1,41 +1,58 @@
-import getStream from "@/lib/farcaster/client/getStream";
+import getLatestCastByFid from "@/lib/farcaster/getLatestCastByFid";
 import processMessage from "@/lib/farcaster/processMessage";
 import farcasterClient from "./lib/farcaster/client";
+import { Message } from "@farcaster/hub-nodejs";
+import { fromHex } from "viem";
 
-let messageCount = 0;
-const lastEventFile = Bun.file("./lastEventId.txt");
+let lastProcessedHash: string | null = null;
+
+const pollForNewCasts = async (fid: number) => {
+  try {
+    const latestCast = await getLatestCastByFid(fid);
+
+    if (latestCast && latestCast.post_hash !== lastProcessedHash) {
+      console.log(`New cast found from FID ${fid}: ${latestCast.post_hash}`);
+      lastProcessedHash = latestCast.post_hash;
+
+      // Create a Message-like object that processMessage expects
+      const messageData = {
+        data: {
+          fid: latestCast.authorFid,
+          timestamp: latestCast.created_at.getTime(),
+          type: 1, // CastAdd type
+          network: 1, // MAINNET
+        },
+        hash: fromHex(latestCast.post_hash, "bytes"),
+        hashScheme: 1,
+        signature: new Uint8Array(), // Empty signature since we're just reading
+        signatureScheme: 1,
+        signer: new Uint8Array(), // Empty signer since we're just reading
+      } as Message;
+
+      await processMessage(messageData);
+    }
+  } catch (error: any) {
+    console.error("Error polling for new casts:", error.message);
+  }
+};
 
 const init = async () => {
-  console.log("Starting Farcaster GRPC Indexer");
+  console.log("Starting Farcaster Cast Poller");
+
+  // Reference to sweetman.eth's FID from shouldReply.ts
+  const SWEETMAN_FID = 210648;
+
   farcasterClient.$.waitForReady(Date.now() + 5000, async (e) => {
     if (e) {
       console.error(`Farcaster client failed to connect`);
       process.exit(1);
     }
-    const lastEventId = (await lastEventFile.exists())
-      ? Number(await lastEventFile.text())
-      : undefined;
 
-    if (lastEventId) {
-      console.log(`Resuming from event ${lastEventId}`);
+    // Start polling loop
+    while (true) {
+      await pollForNewCasts(SWEETMAN_FID);
+      await new Promise((resolve) => setTimeout(resolve, 11000)); // Wait 11 seconds
     }
-
-    const stream = await getStream(farcasterClient, lastEventId);
-
-    for await (const event of stream) {
-      messageCount++;
-      if (messageCount % 10000 === 0) {
-        console.log("Processed", messageCount, "messages");
-      }
-      try {
-        const message = event.mergeMessageBody.message;
-        await processMessage(message);
-        lastEventFile.writer().write(event.id.toString());
-      } catch (error: any) {
-        console.error("Error processing message:", error.message);
-      }
-    }
-    farcasterClient.close();
   });
 };
 
