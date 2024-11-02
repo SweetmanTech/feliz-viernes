@@ -27,7 +27,7 @@ export async function generateResponse({
 Include a practical spell that relates to the post's content while maintaining the serious, magical, theme.`;
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-4-turbo-preview",
+      model: "gpt-4o-mini",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
