@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "farcaster-grpc-indexer",
+      name: "feliz-viernes",
       script: "bun",
       args: "start",
     },

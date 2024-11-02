@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - arpit/deploy-action
 
 jobs:
   deploy:
@@ -28,13 +27,13 @@ jobs:
           script: |
             echo "Connected to Droplet"
             # Create app directory if it doesn't exist
-            mkdir -p ~/farcaster-grpc-indexer
-            cd ~/farcaster-grpc-indexer
+            mkdir -p ~/feliz-viernes
+            cd ~/feliz-viernesindexer
 
             # Initialize git repository if it doesn't exist
             if [ ! -d .git ]; then
               git init
-              git remote add origin https://github.com/Coop-Records/farcaster-grpc-indexer.git
+              git remote add origin https://github.com/SweetmanTech/feliz-viernes.git
             fi
 
             # Fetch latest code and handle local changes
