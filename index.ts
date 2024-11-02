@@ -21,6 +21,7 @@ const pollForNewCasts = async (fid: number) => {
           timestamp: latestCast.created_at.getTime(),
           type: 1, // CastAdd type
           network: 1, // MAINNET
+          text: latestCast.text,
         },
         hash: fromHex(latestCast.post_hash, "bytes"),
         hashScheme: 1,

@@ -13,9 +13,7 @@ const processMessage = async (message: Message) => {
   }
 
   const authorFid = messageData.fid;
-  console.log(authorFid);
   const author = await getUserDataByFid(authorFid);
-  console.log(author.username);
 
   const newCast = {
     post_hash: toHex(message.hash),
@@ -25,10 +23,10 @@ const processMessage = async (message: Message) => {
     authorFid,
     embeds: [],
     alternativeEmbeds: [],
+    text: (messageData as any)?.text || "",
   };
-
   // Check if we should reply to this cast
-  const { isFromSweetman, reason } = shouldReply(newCast);
+  const { isFromSweetman } = shouldReply(newCast);
 
   if (isFromSweetman) {
     console.log(`Replying to cast from sweetman.eth: ${newCast.post_hash}`);

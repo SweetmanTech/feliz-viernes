@@ -37,6 +37,7 @@ const getLatestCastByFid = async (fid: number): Promise<Cast | null> => {
     authorFid: fid,
     embeds: [],
     alternativeEmbeds: [],
+    text: messageData.castAddBody?.text || "",
   };
 
   return cast;

@@ -8,6 +8,7 @@ import {
   NobleEd25519Signer,
 } from "@farcaster/hub-nodejs";
 import { submitMessage } from "./submitMessage";
+import { generateResponse } from "../openai/generateResponse";
 
 const SIGNER_PRIVATE_KEY = process.env.SIGNER_PRIVATE_KEY as Address;
 const APP_FID = Number(process.env.APP_FID);
@@ -28,18 +29,15 @@ const dataOptions = {
 };
 
 const botCast = async (cast: Cast) => {
+  // Generate magical response
+  const response = await generateResponse({
+    text: cast.text, // You'll need to add this to your Cast type
+    username: cast.author.username,
+  });
+
   const castAddBody: CastAddBody = {
-    text: `This song is now available on  where you earn NOTES when people tip you.\n\nSee you over there!\n\nhttps://sonata.tips/cast/${
-      cast.author.username
-    }/${cast.post_hash.substring(0, 8)}`,
-    embeds: [
-      {
-        url: `https://www.sonata.tips/api/frame?post_hash=${cast.post_hash.substring(
-          0,
-          8
-        )}`,
-      },
-    ],
+    text: response,
+    embeds: [],
     type: CastType.CAST,
     parentCastId: {
       fid: cast.authorFid,
@@ -49,6 +47,7 @@ const botCast = async (cast: Cast) => {
     mentionsPositions: [],
     embedsDeprecated: [],
   };
+  console.log("text: response", response);
 
   const castAdd = await makeCastAdd(castAddBody, dataOptions, signer);
   await submitMessage(castAdd);
