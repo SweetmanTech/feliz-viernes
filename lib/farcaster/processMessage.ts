@@ -1,9 +1,7 @@
-import { Message, MessageType } from "@farcaster/hub-nodejs";
-import getChannelIdFromCast from "@/lib/getChannelIdFromCast";
+import { Message } from "@farcaster/hub-nodejs";
 import { toHex } from "viem";
 import getDate from "@/lib/farcaster/getDate";
 import getUserDataByFid from "@/lib/farcaster/getUserByFid";
-import shouldReply from "@/lib/shouldReply";
 import botCast from "@/lib/farcaster/botCast";
 
 const processMessage = async (message: Message) => {
@@ -25,13 +23,9 @@ const processMessage = async (message: Message) => {
     alternativeEmbeds: [],
     text: (messageData as any)?.text || "",
   };
-  // Check if we should reply to this cast
-  const { isFromSweetman } = shouldReply(newCast);
 
-  if (isFromSweetman) {
-    console.log(`Replying to cast from sweetman.eth: ${newCast.post_hash}`);
-    await botCast(newCast);
-  }
+  console.log(`Replying to cast from sweetman.eth: ${newCast.post_hash}`);
+  await botCast(newCast);
 };
 
 export default processMessage;
