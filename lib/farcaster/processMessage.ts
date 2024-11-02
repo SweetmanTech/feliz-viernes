@@ -20,39 +20,27 @@ const processMessage = async (message: Message) => {
   }
 
   const { castAddBody } = messageData;
-  const validEmbed = await getValidEmbed(castAddBody);
-  if (!(validEmbed && validEmbed.url)) {
-    return;
-  }
+  // TODO: filer on posts from SWEETMAN_ETH in a geners shouldReply filter lib.
+  // const validEmbed = await getValidEmbed(castAddBody);
+  // if (!(validEmbed && validEmbed.url)) {
+  //   return;
+  // }
 
   const channelId = getChannelIdFromCast(castAddBody);
   const authorFid = messageData.fid;
   const author = await getUserDataByFid(authorFid);
 
-  let alternativeEmbeds = [];
-  try {
-    if (validEmbed.platform === "spotify")
-      try {
-        alternativeEmbeds = await getAlternativeEmbeds(validEmbed.url);
-      } catch (error: any) {
-        console.error(error.message, validEmbed.url);
-      }
-  } catch (error: any) {
-    console.error(error.message);
-  }
-
   const newCast = {
     post_hash: toHex(message.hash),
     likes: 0,
     created_at: getDate(messageData.timestamp),
-    embeds: [validEmbed],
     author,
     channelId,
-    alternativeEmbeds,
     authorFid,
   };
 
-  await botCast(newCast);
+  console.log(newCast);
+  // await botCast(newCast);
 };
 
 export default processMessage;
