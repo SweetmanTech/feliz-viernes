@@ -12,6 +12,10 @@ To run:
 bun start
 ```
 
+## Documentation
+
+- [Product Requirements Document (PRD)](./requirements.txt)
+
 ## Sonatabot
 
 ### How does it work?
