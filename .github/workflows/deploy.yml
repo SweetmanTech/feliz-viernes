@@ -28,7 +28,7 @@ jobs:
             echo "Connected to Droplet"
             # Create app directory if it doesn't exist
             mkdir -p ~/feliz-viernes
-            cd ~/feliz-viernesindexer
+            cd ~/feliz-viernes
 
             # Initialize git repository if it doesn't exist
             if [ ! -d .git ]; then
