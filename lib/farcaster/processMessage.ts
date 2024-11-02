@@ -5,7 +5,6 @@ import { toHex } from "viem";
 import getDate from "@/lib/farcaster/getDate";
 import getUserDataByFid from "@/lib/farcaster/getUserByFid";
 import getAlternativeEmbeds from "@/lib/getAlternativeEmbeds";
-import upsertCast from "@/lib/supabse/upsertCast";
 import botCast from "@/lib/farcaster/botCast";
 
 const processMessage = async (message: Message) => {
@@ -52,7 +51,7 @@ const processMessage = async (message: Message) => {
     alternativeEmbeds,
     authorFid,
   };
-  await upsertCast(newCast);
+
   await botCast(newCast);
 };
 
