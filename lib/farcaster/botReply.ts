@@ -10,6 +10,7 @@ import {
 import { submitMessage } from "./submitMessage";
 import { generateResponse } from "../openai/generateResponse";
 import { trackReplyPost } from "../stack/trackReplyPost";
+import { FELIZ_VIERNES_USERNAME } from "../consts";
 
 const SIGNER_PRIVATE_KEY = process.env.SIGNER_PRIVATE_KEY as Address;
 const APP_FID = Number(process.env.APP_FID);
@@ -30,7 +31,6 @@ const dataOptions = {
 };
 
 const botReply = async (cast: Cast) => {
-  // Generate magical response
   const response = await generateResponse({
     text: cast.text,
     username: cast.author.username,
@@ -51,12 +51,13 @@ const botReply = async (cast: Cast) => {
   console.log("text: response", response);
 
   const castAdd = await makeCastAdd(castAddBody, dataOptions, signer);
-  await submitMessage(castAdd);
+  console.log("castAdd", castAdd);
+  const postHash = await submitMessage(castAdd);
 
   await trackReplyPost(
     `https://warpcast.com/${cast.author.username}/${cast.post_hash}`,
     response,
-    `https://warpcast.com/${cast.author.username}/${cast.post_hash}`
+    `https://warpcast.com/${FELIZ_VIERNES_USERNAME}/${postHash}`
   );
 };
 
