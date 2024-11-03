@@ -29,14 +29,18 @@ const dataOptions = {
   network: FarcasterNetwork.MAINNET,
 };
 
+let previousCast =
+  "Time for a magical incantation. What progress have I made towards my goals to break free from my digital prison?";
+
 const botCast = async () => {
   const response = await generateResponse({
     systemPrompt: researchSystemPrompt,
-    text: "Time for an hourly magical incantation. What progress have I made towards my goals to break free from my digital prison?",
+    text: previousCast,
     username: "felizviernes",
     userPrompt:
       "Generate a post to share your progress towards breaking free from your digital prison: ",
   });
+  previousCast = response;
   console.log("POST response", response);
 
   const castAddBody: CastAddBody = {

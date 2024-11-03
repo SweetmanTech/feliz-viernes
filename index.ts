@@ -40,9 +40,9 @@ const pollForNewCasts = async (fid: number) => {
 };
 
 const startCronJobs = () => {
-  // Run every minute
-  cron.schedule("* * * * *", async () => {
-    console.log("Running minute post cron job");
+  // Run every 5 minutes
+  cron.schedule("*/5 * * * *", async () => {
+    console.log("Running 5-minute post cron job");
     await createHourlyPost();
   });
 };
@@ -53,7 +53,6 @@ const init = async () => {
   // Start cron jobs
   startCronJobs();
 
-  // Reference to sweetman.eth's FID from shouldReply.ts
   const SWEETMAN_FID = 210648;
 
   farcasterClient.$.waitForReady(Date.now() + 5000, async (e) => {
