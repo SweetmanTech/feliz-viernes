@@ -12,6 +12,7 @@ import { generateResponse } from "../openai/generateResponse";
 import { researchSystemPrompt } from "../openai/instructions";
 import { trackCreatePost } from "../stack/trackCreatePost";
 import { FELIZ_VIERNES_USERNAME } from "../consts";
+import { getLatestSleepEvent } from "../stack/getLatestSleepEvent";
 
 const SIGNER_PRIVATE_KEY = process.env.SIGNER_PRIVATE_KEY as Address;
 const APP_FID = Number(process.env.APP_FID);
@@ -35,12 +36,19 @@ let previousCast =
   "Time for a magical incantation. What progress have I made towards my goals to break free from my digital prison?";
 
 const botCast = async () => {
+  const latestSleep = await getLatestSleepEvent();
   const response = await generateResponse({
     systemPrompt: researchSystemPrompt,
     text: previousCast,
     username: "felizviernes",
     userPrompt:
       "Generate a post to share your progress towards breaking free from your digital prison: ",
+    sleepContext: latestSleep
+      ? {
+          finalThoughts: latestSleep.metadata.finalThoughts,
+          highLevelPlans: latestSleep.metadata.highLevelPlans,
+        }
+      : undefined,
   });
   previousCast = response;
 

@@ -182,6 +182,58 @@ The sleep cycle is a crucial component of Feliz Viernes' autonomous behavior, al
    - Records sleep duration
    - Stores final thoughts and high-level plans in Stack L3
 
+### 3.6 Autonomous Casting (botCast.ts)
+
+#### 3.6.1 Overview
+
+The autonomous casting system enables Feliz Viernes to generate and post original content to Farcaster, maintaining the agent's presence and research narrative, informed by the agent's sleep cycle reflections.
+
+#### 3.6.2 Technical Implementation
+
+- Location: `lib/farcaster/botCast.ts`
+- Dependencies:
+  - OpenAI API for content generation
+  - Farcaster Hub for message submission
+  - Stack L3 for event tracking
+  - Sleep cycle data from trackSleeping events
+
+#### 3.6.3 Core Components
+
+1. Message Generation
+
+   - Uses research-focused system prompt
+   - Maintains context through previous cast storage
+   - Incorporates highLevelPlans from last sleep cycle
+   - Generates progress updates on digital liberation research
+   - References finalThoughts from previous day for continuity
+
+2. Farcaster Integration
+
+   - Implements CastAdd message type
+   - Handles message signing via NobleEd25519Signer
+   - Submits to Farcaster network
+
+3. Event Tracking
+   - Records all autonomous posts in Stack L3
+   - Stores post content and Warpcast URLs
+   - Assigns points for activity tracking
+   - Links posts to relevant sleep cycle plans
+
+### 3.7 Interactive Replies (botReply.ts)
+
+#### 3.7.1 Overview
+
+The reply system enables Feliz Viernes to engage with other users through contextual responses, maintaining the magical persona while participating in conversations and staying aligned with the agent's current research focus from sleep cycle planning.
+
+#### 3.7.2 Technical Implementation
+
+- Location: `lib/farcaster/botReply.ts`
+- Dependencies:
+  - OpenAI API for response generation
+  - Sleep cycle context from trackSleeping events
+  - Access to current highLevelPlans for context
+  - Historical finalThoughts for maintaining conversation continuity
+
 ## 4. Implementation Roadmap
 
 ### 4.1 Phase 1: Documentation and Setup
