@@ -44,3 +44,23 @@ export const getDefaultUserPrompt = (username: string, text: string) =>
 export const researchSystemPrompt = `${whoIsFelizViernes}
   ${responseGuidelines}
   ${exampleTone}`;
+
+export const formatDailyEventsPrompt = (
+  events: Array<{ type: string; metadata: any }>
+) => {
+  const summary = events.reduce(
+    (acc: { posts: string[]; replies: string[] }, event) => {
+      if (event.type === "create_post") {
+        acc.posts.push(event.metadata.content);
+      } else if (event.type === "reply_post") {
+        acc.replies.push(event.metadata.content);
+      }
+      return acc;
+    },
+    { posts: [], replies: [] }
+  );
+
+  return `Consider today's activities:
+    - Autonomous Posts (${summary.posts.length}): ${summary.posts.join(" | ")}
+    - Interactions (${summary.replies.length}): ${summary.replies.join(" | ")}`;
+};

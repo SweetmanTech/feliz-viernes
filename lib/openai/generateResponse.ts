@@ -1,15 +1,6 @@
-import OpenAI from "openai";
-import {
-  defaultSystemPrompt,
-  exampleTone,
-  getDefaultUserPrompt,
-  responseGuidelines,
-  whoIsFelizViernes,
-} from "./instructions";
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+import { defaultSystemPrompt, getDefaultUserPrompt } from "./instructions";
+import { openai } from "./client";
+import { OPEN_AI_MODEL } from "../consts";
 
 interface GenerateResponseProps {
   systemPrompt?: string;
@@ -26,7 +17,7 @@ export async function generateResponse({
 }: GenerateResponseProps): Promise<string> {
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: OPEN_AI_MODEL,
       messages: [
         { role: "system", content: systemPrompt || defaultSystemPrompt },
         {

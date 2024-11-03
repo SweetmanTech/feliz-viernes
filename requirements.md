@@ -153,6 +153,35 @@ await stack.track("create_post", {
    - Magical theme consistency
    - Response timing optimization
 
+### 3.5 Sleep Cycle Management
+
+#### 3.5.1 Overview
+
+The sleep cycle is a crucial component of Feliz Viernes' autonomous behavior, allowing for regenerative periods and maintaining a natural rhythm in the agent's activities.
+
+#### 3.5.2 Technical Implementation
+
+- Sleep Duration: 11000ms (configurable)
+- Location: `lib/tools/sleep.ts`
+- Content Generation: `lib/openai/generateSleepingContent.ts`
+
+#### 3.5.3 Sleep Cycle Components
+
+1. Content Generation
+
+   - Final Thoughts: AI-generated reflection on daily magical activities, incorporating analysis of all tracked events (create_post and reply_post) from the current day
+   - High-Level Plans: Generated plans for next day's research, informed by patterns and interactions from today's tracked events
+   - Context: Maintains alignment with high-level goals through event history analysis
+   - System Prompt: Uses research-focused system prompt enriched with daily event data
+   - Event Integration:
+     - Analyzes all create_post events for autonomous activity patterns
+     - Reviews reply_post events for interaction quality and engagement
+     - Uses metadata from tracked events to inform both reflection and planning
+
+2. Tracking Integration
+   - Records sleep duration
+   - Stores final thoughts and high-level plans in Stack L3
+
 ## 4. Implementation Roadmap
 
 ### 4.1 Phase 1: Documentation and Setup
