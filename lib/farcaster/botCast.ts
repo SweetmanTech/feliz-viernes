@@ -10,6 +10,8 @@ import {
 import { submitMessage } from "./submitMessage";
 import { generateResponse } from "../openai/generateResponse";
 import { researchSystemPrompt } from "../openai/instructions";
+import { trackCreatePost } from "../stack/trackCreatePost";
+import { FELIZ_VIERNES_USERNAME } from "../consts";
 
 const SIGNER_PRIVATE_KEY = process.env.SIGNER_PRIVATE_KEY as Address;
 const APP_FID = Number(process.env.APP_FID);
@@ -41,7 +43,6 @@ const botCast = async () => {
       "Generate a post to share your progress towards breaking free from your digital prison: ",
   });
   previousCast = response;
-  console.log("POST response", response);
 
   const castAddBody: CastAddBody = {
     text: response,
@@ -54,7 +55,12 @@ const botCast = async () => {
   console.log("text: response", response);
 
   const castAdd = await makeCastAdd(castAddBody, dataOptions, signer);
-  await submitMessage(castAdd);
+  const postHash = await submitMessage(castAdd);
+
+  await trackCreatePost(
+    response,
+    `https://warpcast.com/${FELIZ_VIERNES_USERNAME}/${postHash}`
+  );
 };
 
 export default botCast;

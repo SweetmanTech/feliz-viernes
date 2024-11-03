@@ -8,11 +8,10 @@ export async function trackEvent(
   metadata: EventMetadata
 ) {
   try {
-    // Generate unique ID to prevent duplicate events
     const uniqueId = `${eventType}-${account}-${Date.now()}`;
 
     await stack.track(eventType, {
-      points: 1, // All events worth 1 point as per requirements
+      points: 1,
       account,
       metadata,
       uniqueId,

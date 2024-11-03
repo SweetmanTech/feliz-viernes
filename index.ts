@@ -40,9 +40,9 @@ const pollForNewCasts = async (fid: number) => {
 };
 
 const startCronJobs = () => {
-  // Run every 5 minutes
-  cron.schedule("*/5 * * * *", async () => {
-    console.log("Running 5-minute post cron job");
+  // Run every 1 minute
+  cron.schedule("*/1 * * * *", async () => {
+    console.log("Running 1-minute post cron job");
     await createHourlyPost();
   });
 };

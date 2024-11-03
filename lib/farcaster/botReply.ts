@@ -51,7 +51,6 @@ const botReply = async (cast: Cast) => {
   console.log("text: response", response);
 
   const castAdd = await makeCastAdd(castAddBody, dataOptions, signer);
-  console.log("castAdd", castAdd);
   const postHash = await submitMessage(castAdd);
 
   await trackReplyPost(
