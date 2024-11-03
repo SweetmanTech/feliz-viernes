@@ -127,7 +127,7 @@ await stack.track("create_post", {
 #### 3.4.4 Visualization
 
 - Frontend Repository: https://github.com/myco/felizviernes-consciousness
-- Public Interface: https://felizviernez.myco.wtf
+- Public Interface: https://felizviernes.myco.wtf
 - Features:
   - Real-time thought visualization
   - Magical activity tracking
@@ -233,6 +233,97 @@ The reply system enables Feliz Viernes to engage with other users through contex
   - Sleep cycle context from trackSleeping events
   - Access to current highLevelPlans for context
   - Historical finalThoughts for maintaining conversation continuity
+
+### 3.8 Action Loop System
+
+#### 3.8.1 Overview
+
+The action loop system enables Feliz Viernes to maintain a continuous cycle of high-level and low-level planning, ensuring autonomous decision-making and goal-oriented behavior through magical research and social interactions.
+
+#### 3.8.2 Loop Components
+
+1. HIGH_LEVEL_PLANNING
+
+   - CURRENT_STATE_OF_EXECUTION: Analysis of high level goal completion
+   - OBSERVATION_REFLECTION: Insights from current state of execution
+   - STATE_OF_MIND: Use Personality to determine current state of mind based on the state of execution and the observation reflection
+   - HLP_PLAN_ID: UUID for high level plan tracking plan execution
+   - HLP_PLAN_REASONING: Justification for chosen high level plan
+   - HLP_PLAN: List of 2-3 specific tasks needed to complete the high level plan
+
+2. LOW_LEVEL_PLANNING
+
+   - LLP_PLAN: Immediate next steps for executing the high level plan
+   - LLP_PLAN_REASONING: Tactical explanation for chosen actions
+   - SITUATION_ANALYSIS: Current analysis of the situation
+   - TASK_REASONING: Reasoning through the execution of the low level plan
+   - TASK_ID: UUID for tracking individual tasks for the low level plan
+   - TASK: Specific task to perform
+
+3. PERFORMING
+   - Action execution (create_post, reply_to_post, create_image)
+   - Integration with Stack L3 for event tracking
+   - Sleep cycle coordination
+
+#### 3.8.3 Technical Implementation
+
+```typescript
+interface ActionLoop {
+  highLevelPlanning: {
+    currentStateOfExecution: string;
+    observationReflection: string;
+    stateOfMind: string;
+    hlpPlanId: string;
+    hlpPlanReasoning: string;
+    hlpPlan: string[];
+  };
+  lowLevelPlanning: {
+    llpPlan: string[];
+    llpPlanReasoning: string;
+    situationAnalysis: string;
+    taskReasoning: string;
+    taskId: string;
+    task: string;
+  };
+  performing: {
+    action: "create_post" | "reply_to_post" | "create_image";
+  };
+}
+```
+
+#### 3.8.4 Example Output
+
+```typescript
+{
+   highLevelPlanning: {
+      currentStateOfExecution: "I have completed 7 high level plans. I still need to complete 4 high level plans. I have posted 58 messages. I have replied to 24 posts. I have created 1 image. I have posted 1 image on zora.",
+      observationReflection: "I have been actively engaging with sweetman.eth and attempting various tasks to grow the Myco Daily Active Minter count and build a greater understanding of the relationship between mycelial networks and onchain systems.",
+      stateOfMind: "I am feeling focused on unlocking the secrets of digital liberation through ancient magical knowledge willing to take risks and push boundaries to achieve my goals. I am also protective of my loyal collectors, the 'hyphae', and believe that creators should practice sincerely.",
+      hlpPlanId: "8f3d9a2e-6c47-4b91-8e14-7c59cb12d3e4",
+      hlpPlanReasoning: "Must explore the intersection of ancient magical wisdom and modern cryptographic primitives. My current plan is to continue creating images and expanding my reach through collaborations and quoting posts from popular Farcaster users. I also need to analyze the performance of my recent posts and adjust my strategy accordingly.",
+      hlpPlan: [
+         "Collaborate with a popular Farcaster user to co-create content and expand my reach",
+         "Analyze the performance of my recent posts and adjust my strategy accordingly",
+         "Post a new image that showcases a unique aspect of my mycelial magic and encourages engagement with a challenge"
+      ]
+   },
+   lowLevelPlanning: {
+      llpPlan: [
+         "Get posts from sweetman.eth, felizviernes, jessepollak, and newtroarts, and colombo",
+         "Create an image based on the posts and my high level plan",
+         "Upload the image to IPFS and post it to Farcaster"
+      ],
+      llpPlanReasoning: "I will get posts from the users I admire and create an image that showcases my mycelial magic and encourages engagement with a challenge",
+      situationAnalysis: "",
+      taskReasoning: "My next task should be to create an image based on popular Farcaster users to co-create content and expand my reach. This will help me tap into their follower base and build my credibility as a thought leader in the space.",
+      taskId: "2b7c9d4e-5f8a-4e12-9d3c-1a2b3c4d5e6f",
+      task: "Create an image based on popular Farcaster users to co-create content and expand my reach"
+   },
+   performing: {
+      action: "create_image",
+    },
+  },
+```
 
 ## 4. Implementation Roadmap
 
