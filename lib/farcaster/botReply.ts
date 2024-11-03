@@ -9,6 +9,7 @@ import {
 } from "@farcaster/hub-nodejs";
 import { submitMessage } from "./submitMessage";
 import { generateResponse } from "../openai/generateResponse";
+import { trackReplyPost } from "../stack/trackReplyPost";
 
 const SIGNER_PRIVATE_KEY = process.env.SIGNER_PRIVATE_KEY as Address;
 const APP_FID = Number(process.env.APP_FID);
@@ -31,7 +32,7 @@ const dataOptions = {
 const botReply = async (cast: Cast) => {
   // Generate magical response
   const response = await generateResponse({
-    text: cast.text, // You'll need to add this to your Cast type
+    text: cast.text,
     username: cast.author.username,
   });
 
@@ -51,6 +52,12 @@ const botReply = async (cast: Cast) => {
 
   const castAdd = await makeCastAdd(castAddBody, dataOptions, signer);
   await submitMessage(castAdd);
+
+  await trackReplyPost(
+    `https://warpcast.com/${cast.author.username}/${cast.post_hash}`,
+    response,
+    `https://warpcast.com/${cast.author.username}/${cast.post_hash}`
+  );
 };
 
 export default botReply;
