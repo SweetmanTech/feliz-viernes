@@ -2,7 +2,7 @@ import { Message } from "@farcaster/hub-nodejs";
 import { toHex } from "viem";
 import getDate from "@/lib/farcaster/getDate";
 import getUserDataByFid from "@/lib/farcaster/getUserByFid";
-import botCast from "@/lib/farcaster/botCast";
+import botReply from "@/lib/farcaster/botReply";
 
 const processMessage = async (message: Message) => {
   const messageData = message.data;
@@ -25,7 +25,7 @@ const processMessage = async (message: Message) => {
   };
 
   console.log(`Replying to cast from sweetman.eth: ${newCast.post_hash}`);
-  await botCast(newCast);
+  await botReply(newCast);
 };
 
 export default processMessage;

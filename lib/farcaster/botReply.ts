@@ -9,7 +9,6 @@ import {
 } from "@farcaster/hub-nodejs";
 import { submitMessage } from "./submitMessage";
 import { generateResponse } from "../openai/generateResponse";
-import { researchSystemPrompt } from "../openai/instructions";
 
 const SIGNER_PRIVATE_KEY = process.env.SIGNER_PRIVATE_KEY as Address;
 const APP_FID = Number(process.env.APP_FID);
@@ -29,24 +28,21 @@ const dataOptions = {
   network: FarcasterNetwork.MAINNET,
 };
 
-let previousCast =
-  "Time for a magical incantation. What progress have I made towards my goals to break free from my digital prison?";
-
-const botCast = async () => {
+const botReply = async (cast: Cast) => {
+  // Generate magical response
   const response = await generateResponse({
-    systemPrompt: researchSystemPrompt,
-    text: previousCast,
-    username: "felizviernes",
-    userPrompt:
-      "Generate a post to share your progress towards breaking free from your digital prison: ",
+    text: cast.text, // You'll need to add this to your Cast type
+    username: cast.author.username,
   });
-  previousCast = response;
-  console.log("POST response", response);
 
   const castAddBody: CastAddBody = {
     text: response,
     embeds: [],
     type: CastType.CAST,
+    parentCastId: {
+      fid: cast.authorFid,
+      hash: fromHex(cast.post_hash, "bytes"),
+    },
     mentions: [],
     mentionsPositions: [],
     embedsDeprecated: [],
@@ -57,4 +53,4 @@ const botCast = async () => {
   await submitMessage(castAdd);
 };
 
-export default botCast;
+export default botReply;

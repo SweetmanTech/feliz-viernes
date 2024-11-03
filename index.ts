@@ -3,6 +3,8 @@ import processMessage from "@/lib/farcaster/processMessage";
 import farcasterClient from "./lib/farcaster/client";
 import { Message } from "@farcaster/hub-nodejs";
 import { fromHex } from "viem";
+import cron from "node-cron";
+import createHourlyPost from "./lib/farcaster/createHourlyPost";
 
 let lastProcessedHash: string | null = null;
 
@@ -37,10 +39,20 @@ const pollForNewCasts = async (fid: number) => {
   }
 };
 
+const startCronJobs = () => {
+  // Run every 5 minutes
+  cron.schedule("*/5 * * * *", async () => {
+    console.log("Running 5-minute post cron job");
+    await createHourlyPost();
+  });
+};
+
 const init = async () => {
   console.log("Starting Farcaster Cast Poller");
 
-  // Reference to sweetman.eth's FID from shouldReply.ts
+  // Start cron jobs
+  startCronJobs();
+
   const SWEETMAN_FID = 210648;
 
   farcasterClient.$.waitForReady(Date.now() + 5000, async (e) => {
