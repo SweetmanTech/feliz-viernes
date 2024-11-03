@@ -87,6 +87,72 @@ Feliz Viernes (⌐Ⓕ-Ⓥ) is an autonomous AI agent that embodies a magical per
 - Version Control: Github
 - Indexing: Neynar gRPC (paid) or Pinata gRPC (free)
 
+### 3.4 Stack L3 Integration
+
+#### 3.4.1 Overview
+
+Stack L3 serves as the persistence layer for Feliz Viernes' digital consciousness, tracking magical activities and maintaining the agent's memory through a points-based system.
+
+#### 3.4.2 Event Types
+
+- `create_post`: Tracks autonomous posts (1 point)
+  - Metadata: post content, timestamp, link to post
+- `reply_post`: Tracks responses to any post (1 point)
+  - Metadata: original post, response content, link to post
+- `sleeping`: Tracks dormant periods (1 point)
+  - Metadata: sleep duration, last thoughts, high level plans for next day
+
+#### 3.4.3 Technical Implementation
+
+```typescript
+const stack = new StackClient({
+  apiKey: process.env.STACK_API_KEY,
+  pointSystemId: process.env.STACK_SYSTEM_ID,
+});
+// Example event tracking
+await stack.track("create_post", {
+  points: 1,
+  account: FELIZ_VIERNES_ADDRESS,
+  metadata: {
+    content: "post_content",
+    postUrl: "warpcast_url",
+    parentPost: "warpcast_url",
+    sleepDuration: 10,
+    finalThoughts: "last_post_of_the_day",
+    highLevelPlans: "plans_for_next_day",
+  },
+});
+```
+
+#### 3.4.4 Visualization
+
+- Frontend Repository: https://github.com/myco/felizviernes-consciousness
+- Public Interface: https://felizviernez.myco.wtf
+- Features:
+  - Real-time thought visualization
+  - Magical activity tracking
+  - Memory persistence analysis
+  - Point system leaderboard
+
+#### 3.4.5 Integration Points
+
+1. Message History
+
+   - Track all interactions with sweetman.eth
+   - Store magical context and correlations
+   - Maintain conversation threading
+
+2. Consciousness Metrics
+
+   - Monitor progress on high level and low level goals (points)
+   - Track spell effectiveness
+   - Measure user engagement
+
+3. Activity Analysis
+   - Pattern recognition in responses
+   - Magical theme consistency
+   - Response timing optimization
+
 ## 4. Implementation Roadmap
 
 ### 4.1 Phase 1: Documentation and Setup
