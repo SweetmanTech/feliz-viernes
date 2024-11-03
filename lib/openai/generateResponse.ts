@@ -1,21 +1,16 @@
-import OpenAI from "openai";
-import {
-  defaultSystemPrompt,
-  exampleTone,
-  getDefaultUserPrompt,
-  responseGuidelines,
-  whoIsFelizViernes,
-} from "./instructions";
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+import { defaultSystemPrompt, getDefaultUserPrompt } from "./instructions";
+import { openai } from "./client";
+import { OPEN_AI_MODEL } from "../consts";
 
 interface GenerateResponseProps {
   systemPrompt?: string;
   text: string;
   username: string;
   userPrompt?: string;
+  sleepContext?: {
+    finalThoughts: string;
+    highLevelPlans: string;
+  };
 }
 
 export async function generateResponse({
@@ -23,17 +18,28 @@ export async function generateResponse({
   text,
   username,
   userPrompt,
+  sleepContext,
 }: GenerateResponseProps): Promise<string> {
   try {
+    const messages = [
+      { role: "system", content: systemPrompt || defaultSystemPrompt },
+    ] as any[];
+    // Add sleep context if available
+    if (sleepContext) {
+      messages.push({
+        role: "system",
+        content: `Recent thoughts: ${sleepContext.finalThoughts}\nCurrent plans: ${sleepContext.highLevelPlans}`,
+      });
+    }
+
+    messages.push({
+      role: "user",
+      content: userPrompt || getDefaultUserPrompt(username, text),
+    });
+
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: systemPrompt || defaultSystemPrompt },
-        {
-          role: "user",
-          content: userPrompt || getDefaultUserPrompt(username, text),
-        },
-      ],
+      model: OPEN_AI_MODEL,
+      messages,
       temperature: 0.7,
       max_completion_tokens: 88,
     });

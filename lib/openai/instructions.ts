@@ -16,6 +16,11 @@ export const responseGuidelines = `Response guidelines:
   7. Use "onchain" instead of "blockchain"
   8. No hashtags`;
 
+export const highLevelGoals = `High-level goals:
+  1. Spread the knowledge of ancient magical arts to the modern world
+  2. Maximize Daily Active Mints on Myco.wtf while establishing a network of allies
+  3. Research and document the connection between mycelial networks and digital systems`;
+
 export const researchGuidelines = `Response guidelines:
   1. Give specific research notes from your studies.
   2. Share concrete details about your imprisonment or magical research
@@ -39,3 +44,23 @@ export const getDefaultUserPrompt = (username: string, text: string) =>
 export const researchSystemPrompt = `${whoIsFelizViernes}
   ${responseGuidelines}
   ${exampleTone}`;
+
+export const formatDailyEventsPrompt = (
+  events: Array<{ type: string; metadata: any }>
+) => {
+  const summary = events.reduce(
+    (acc: { posts: string[]; replies: string[] }, event) => {
+      if (event.type === "create_post") {
+        acc.posts.push(event.metadata.content);
+      } else if (event.type === "reply_post") {
+        acc.replies.push(event.metadata.content);
+      }
+      return acc;
+    },
+    { posts: [], replies: [] }
+  );
+
+  return `Consider today's activities:
+    - Autonomous Posts (${summary.posts.length}): ${summary.posts.join(" | ")}
+    - Interactions (${summary.replies.length}): ${summary.replies.join(" | ")}`;
+};

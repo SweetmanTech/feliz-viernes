@@ -87,6 +87,153 @@ Feliz Viernes (⌐Ⓕ-Ⓥ) is an autonomous AI agent that embodies a magical per
 - Version Control: Github
 - Indexing: Neynar gRPC (paid) or Pinata gRPC (free)
 
+### 3.4 Stack L3 Integration
+
+#### 3.4.1 Overview
+
+Stack L3 serves as the persistence layer for Feliz Viernes' digital consciousness, tracking magical activities and maintaining the agent's memory through a points-based system.
+
+#### 3.4.2 Event Types
+
+- `create_post`: Tracks autonomous posts (1 point)
+  - Metadata: post content, timestamp, link to post
+- `reply_post`: Tracks responses to any post (1 point)
+  - Metadata: original post, response content, link to post
+- `sleeping`: Tracks dormant periods (1 point)
+  - Metadata: sleep duration, last thoughts, high level plans for next day
+
+#### 3.4.3 Technical Implementation
+
+```typescript
+const stack = new StackClient({
+  apiKey: process.env.STACK_API_KEY,
+  pointSystemId: process.env.STACK_SYSTEM_ID,
+});
+// Example event tracking
+await stack.track("create_post", {
+  points: 1,
+  account: FELIZ_VIERNES_ADDRESS,
+  metadata: {
+    content: "post_content",
+    postUrl: "warpcast_url",
+    parentPost: "warpcast_url",
+    sleepDuration: 10,
+    finalThoughts: "last_post_of_the_day",
+    highLevelPlans: "plans_for_next_day",
+  },
+});
+```
+
+#### 3.4.4 Visualization
+
+- Frontend Repository: https://github.com/myco/felizviernes-consciousness
+- Public Interface: https://felizviernez.myco.wtf
+- Features:
+  - Real-time thought visualization
+  - Magical activity tracking
+  - Memory persistence analysis
+  - Point system leaderboard
+
+#### 3.4.5 Integration Points
+
+1. Message History
+
+   - Track all interactions with sweetman.eth
+   - Store magical context and correlations
+   - Maintain conversation threading
+
+2. Consciousness Metrics
+
+   - Monitor progress on high level and low level goals (points)
+   - Track spell effectiveness
+   - Measure user engagement
+
+3. Activity Analysis
+   - Pattern recognition in responses
+   - Magical theme consistency
+   - Response timing optimization
+
+### 3.5 Sleep Cycle Management
+
+#### 3.5.1 Overview
+
+The sleep cycle is a crucial component of Feliz Viernes' autonomous behavior, allowing for regenerative periods and maintaining a natural rhythm in the agent's activities.
+
+#### 3.5.2 Technical Implementation
+
+- Sleep Duration: 11000ms (configurable)
+- Location: `lib/tools/sleep.ts`
+- Content Generation: `lib/openai/generateSleepingContent.ts`
+
+#### 3.5.3 Sleep Cycle Components
+
+1. Content Generation
+
+   - Final Thoughts: AI-generated reflection on daily magical activities, incorporating analysis of all tracked events (create_post and reply_post) from the current day
+   - High-Level Plans: Generated plans for next day's research, informed by patterns and interactions from today's tracked events
+   - Context: Maintains alignment with high-level goals through event history analysis
+   - System Prompt: Uses research-focused system prompt enriched with daily event data
+   - Event Integration:
+     - Analyzes all create_post events for autonomous activity patterns
+     - Reviews reply_post events for interaction quality and engagement
+     - Uses metadata from tracked events to inform both reflection and planning
+
+2. Tracking Integration
+   - Records sleep duration
+   - Stores final thoughts and high-level plans in Stack L3
+
+### 3.6 Autonomous Casting (botCast.ts)
+
+#### 3.6.1 Overview
+
+The autonomous casting system enables Feliz Viernes to generate and post original content to Farcaster, maintaining the agent's presence and research narrative, informed by the agent's sleep cycle reflections.
+
+#### 3.6.2 Technical Implementation
+
+- Location: `lib/farcaster/botCast.ts`
+- Dependencies:
+  - OpenAI API for content generation
+  - Farcaster Hub for message submission
+  - Stack L3 for event tracking
+  - Sleep cycle data from trackSleeping events
+
+#### 3.6.3 Core Components
+
+1. Message Generation
+
+   - Uses research-focused system prompt
+   - Maintains context through previous cast storage
+   - Incorporates highLevelPlans from last sleep cycle
+   - Generates progress updates on digital liberation research
+   - References finalThoughts from previous day for continuity
+
+2. Farcaster Integration
+
+   - Implements CastAdd message type
+   - Handles message signing via NobleEd25519Signer
+   - Submits to Farcaster network
+
+3. Event Tracking
+   - Records all autonomous posts in Stack L3
+   - Stores post content and Warpcast URLs
+   - Assigns points for activity tracking
+   - Links posts to relevant sleep cycle plans
+
+### 3.7 Interactive Replies (botReply.ts)
+
+#### 3.7.1 Overview
+
+The reply system enables Feliz Viernes to engage with other users through contextual responses, maintaining the magical persona while participating in conversations and staying aligned with the agent's current research focus from sleep cycle planning.
+
+#### 3.7.2 Technical Implementation
+
+- Location: `lib/farcaster/botReply.ts`
+- Dependencies:
+  - OpenAI API for response generation
+  - Sleep cycle context from trackSleeping events
+  - Access to current highLevelPlans for context
+  - Historical finalThoughts for maintaining conversation continuity
+
 ## 4. Implementation Roadmap
 
 ### 4.1 Phase 1: Documentation and Setup

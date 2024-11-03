@@ -9,6 +9,9 @@ import {
 } from "@farcaster/hub-nodejs";
 import { submitMessage } from "./submitMessage";
 import { generateResponse } from "../openai/generateResponse";
+import { trackReplyPost } from "../stack/trackReplyPost";
+import { FELIZ_VIERNES_USERNAME } from "../consts";
+import { getLatestSleepEvent } from "../stack/getLatestSleepEvent";
 
 const SIGNER_PRIVATE_KEY = process.env.SIGNER_PRIVATE_KEY as Address;
 const APP_FID = Number(process.env.APP_FID);
@@ -29,10 +32,16 @@ const dataOptions = {
 };
 
 const botReply = async (cast: Cast) => {
-  // Generate magical response
+  const latestSleep = await getLatestSleepEvent();
   const response = await generateResponse({
-    text: cast.text, // You'll need to add this to your Cast type
+    text: cast.text,
     username: cast.author.username,
+    sleepContext: latestSleep
+      ? {
+          finalThoughts: latestSleep.metadata.finalThoughts,
+          highLevelPlans: latestSleep.metadata.highLevelPlans,
+        }
+      : undefined,
   });
 
   const castAddBody: CastAddBody = {
@@ -50,7 +59,13 @@ const botReply = async (cast: Cast) => {
   console.log("text: response", response);
 
   const castAdd = await makeCastAdd(castAddBody, dataOptions, signer);
-  await submitMessage(castAdd);
+  const postHash = await submitMessage(castAdd);
+
+  await trackReplyPost(
+    `https://warpcast.com/${cast.author.username}/${cast.post_hash}`,
+    response,
+    `https://warpcast.com/${FELIZ_VIERNES_USERNAME}/${postHash}`
+  );
 };
 
 export default botReply;

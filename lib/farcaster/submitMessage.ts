@@ -1,5 +1,6 @@
 import { type HubResult, type Message } from "@farcaster/hub-nodejs";
 import farcasterClient from "./client";
+import { fromBytes, fromHex } from "viem";
 
 export const submitMessage = async (message: HubResult<Message>) => {
   if (message.isErr()) {
@@ -13,4 +14,5 @@ export const submitMessage = async (message: HubResult<Message>) => {
       `Error submitting message to hub: ${messageSubmitResult.error}`
     );
   }
+  return fromBytes(messageSubmitResult.value.hash, "hex");
 };

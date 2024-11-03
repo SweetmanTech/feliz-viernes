@@ -5,6 +5,7 @@ import { Message } from "@farcaster/hub-nodejs";
 import { fromHex } from "viem";
 import cron from "node-cron";
 import createHourlyPost from "./lib/farcaster/createHourlyPost";
+import sleep from "./lib/tools/sleep";
 
 let lastProcessedHash: string | null = null;
 
@@ -64,7 +65,7 @@ const init = async () => {
     // Start polling loop
     while (true) {
       await pollForNewCasts(SWEETMAN_FID);
-      await new Promise((resolve) => setTimeout(resolve, 11000)); // Wait 11 seconds
+      await sleep();
     }
   });
 };
