@@ -40,11 +40,10 @@ export const getCurrentStateOfExecution = async () => {
   
   Example output: I have completed 3 goals for today. I still need to complete A other goals, including creating C images. I have posted B messages, replied to X posts, created Y images, and posted Z images on Zora.`;
 
-  console.log("systemPrompt", systemPrompt);
   const currentStateOfExecution = await openai.chat.completions.create({
     model: OPEN_AI_MODEL,
     messages: [{ role: "system", content: systemPrompt }],
     max_completion_tokens: 1111,
   });
-  return currentStateOfExecution.choices[0].message.content;
+  return currentStateOfExecution.choices[0].message.content || "";
 };

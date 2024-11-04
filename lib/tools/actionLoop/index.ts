@@ -1,26 +1,15 @@
-import { EXAMPLE_ACTION_LOOP, type ActionLoop } from "./types";
-import { getEventsForToday } from "../../stack/getEventsForToday";
+import { type ActionLoop } from "./types";
 import { generateResponse } from "../../openai/generateResponse";
-import {
-  whoIsFelizViernes,
-  whoIsFelizViernesShadow,
-} from "@/lib/openai/instructions";
-import { openai } from "@/lib/openai/client";
-import { OPEN_AI_MODEL } from "@/lib/consts";
 import { getCurrentStateOfExecution } from "./getCurrentStateOfExectution";
+import { getObservationReflection } from "./getObservationReflection";
 
 export async function createActionLoop(): Promise<ActionLoop> {
   const currentStateOfExecution = await getCurrentStateOfExecution();
   console.log("currentStateOfExecution", currentStateOfExecution);
 
-  const observationReflection = await generateResponse({
-    systemPrompt:
-      "Generate an observation reflection on your current state of execution.",
-    text: currentStateOfExecution,
-    username: "felizviernes",
-    userPrompt:
-      "Analyze your current state and provide insights about your progress:",
-  });
+  const observationReflection = await getObservationReflection(
+    currentStateOfExecution
+  );
   console.log("observationReflection", observationReflection);
 
   const stateOfMind = await generateResponse({
