@@ -4,7 +4,7 @@ import { OPEN_AI_MODEL } from "../consts";
 
 interface GenerateResponseProps {
   systemPrompt?: string;
-  text: string;
+  text?: string;
   username: string;
   userPrompt?: string;
   sleepContext?: {
@@ -34,14 +34,14 @@ export async function generateResponse({
 
     messages.push({
       role: "user",
-      content: userPrompt || getDefaultUserPrompt(username, text),
+      content: userPrompt || getDefaultUserPrompt(username, text || ""),
     });
 
     const response = await openai.chat.completions.create({
       model: OPEN_AI_MODEL,
       messages,
       temperature: 0.7,
-      max_completion_tokens: 88,
+      max_completion_tokens: 333,
     });
 
     return response.choices[0].message.content || "✨ *magical silence* ✨";
