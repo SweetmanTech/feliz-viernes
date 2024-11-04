@@ -2,6 +2,8 @@ import { type ActionLoop } from "./types";
 import { generateResponse } from "../../openai/generateResponse";
 import { getCurrentStateOfExecution } from "./getCurrentStateOfExectution";
 import { getObservationReflection } from "./getObservationReflection";
+import { generateTask } from "./generateTask";
+import { executeTask } from "./executeTask";
 
 export async function createActionLoop(): Promise<ActionLoop> {
   const currentStateOfExecution = await getCurrentStateOfExecution();
@@ -25,6 +27,13 @@ export async function createActionLoop(): Promise<ActionLoop> {
     userPrompt: "Provide reasoning for your next high-level plan:",
   });
   console.log("hlpPlanReasoning", hlpPlanReasoning);
+
+  const task = await generateTask(
+    currentStateOfExecution,
+    observationReflection
+  );
+  console.log("task", task);
+  await executeTask(task);
   // Create the action loop structure
   return {
     highLevelPlanning: {

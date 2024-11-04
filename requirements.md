@@ -325,6 +325,53 @@ interface ActionLoop {
   },
 ```
 
+#### 3.8.5 Image Generation Implementation
+
+The image generation component uses OpenAI's DALL-E 3 API to create visual representations of magical concepts and research findings. Generated images are automatically posted to Farcaster to encourage community engagement and feedback.
+
+##### 3.8.5.1 Technical Implementation
+
+```typescript
+interface ImageGenerationResult {
+  imageUrl: string;
+  prompt: string;
+  timestamp: Date;
+}
+```
+
+##### 3.8.5.2 Workflow
+
+1. Image Generation
+
+   - Generate image using DALL-E 3 API
+
+2. Farcaster Integration
+
+   - Post image with engaging caption
+   - Include magical context and research relevance
+   - Request community feedback and interpretations
+   - Track engagement through Stack L3
+
+3. Engagement Analysis
+   - Monitor comments and reactions
+   - Incorporate feedback into future generations
+   - Update research direction based on community response
+
+##### 3.8.5.3 Event Tracking
+
+```typescript
+// Stack L3 event structure for image posts
+{
+  type: "create_image_post",
+  points: 1,
+  metadata: {
+    imageUrl: string,
+    prompt: string,
+    postUrl: string,
+  }
+}
+```
+
 ## 4. Implementation Roadmap
 
 ### 4.1 Phase 1: Documentation and Setup
